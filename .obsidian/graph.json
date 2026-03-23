@@ -1,0 +1,27 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    { "query": "path:01-Games", "color": { "a": 1, "rgb": 4993536 } },
+    { "query": "path:02-Trends", "color": { "a": 1, "rgb": 16744272 } },
+    { "query": "path:03-Mechanics", "color": { "a": 1, "rgb": 255 } },
+    { "query": "path:05-Insights", "color": { "a": 1, "rgb": 16711680 } }
+  ],
+  "collapse-display", false,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": false,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 1,
+  "close": false
+}
