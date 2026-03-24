@@ -39,34 +39,46 @@ TODAY = datetime.now().strftime("%Y-%m-%d")
 # ────────────────────────────────────────────────
 RSS_SOURCES = [
     {
-        "name": "GamesIndustry.biz",
-        "url": "https://www.gamesindustry.biz/rss/gamesindustry_news_feed.asp",
-        "lang": "en",
-        "focus": ["funding", "acquisition", "team", "market"],
-    },
-    {
         "name": "Game Developer (Gamasutra)",
         "url": "https://www.gamedeveloper.com/rss.xml",
         "lang": "en",
         "focus": ["technical", "design", "market"],
     },
     {
-        "name": "VentureBeat Games",
-        "url": "https://venturebeat.com/category/games/feed/",
+        "name": "IGN Game News",
+        "url": "https://feeds.ign.com/ign/games-all",
         "lang": "en",
-        "focus": ["funding", "technical", "market"],
+        "focus": ["market", "team"],
     },
     {
-        "name": "Pocket Gamer",
-        "url": "https://www.pocketgamer.biz/feed/",
+        "name": "Eurogamer",
+        "url": "https://www.eurogamer.net/?format=rss",
         "lang": "en",
-        "focus": ["market", "mobile"],
+        "focus": ["market", "technical"],
     },
     {
-        "name": "游戏葡萄",
-        "url": "https://gamegrape.baijia.baidu.com/rss",
+        "name": "Rock Paper Shotgun",
+        "url": "https://www.rockpapershotgun.com/feed",
+        "lang": "en",
+        "focus": ["market", "technical"],
+    },
+    {
+        "name": "PC Gamer",
+        "url": "https://www.pcgamer.com/rss/",
+        "lang": "en",
+        "focus": ["market", "technical"],
+    },
+    {
+        "name": "GameSpot News",
+        "url": "https://www.gamespot.com/feeds/mashup/",
+        "lang": "en",
+        "focus": ["market", "team"],
+    },
+    {
+        "name": "触乐网",
+        "url": "https://www.chuapp.com/feed",
         "lang": "zh",
-        "focus": ["market", "team", "funding"],
+        "focus": ["market", "team", "capital"],
     },
 ]
 
