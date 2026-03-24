@@ -1,45 +1,45 @@
+# -*- coding: utf-8 -*-
 """
-daily_intel_collector.py — 游戏行业情报日采集器（系统1：信号采集）
+daily_intel_collector.py -- Game Intel Daily Collector (System 1: Signal Collection)
 
-职责边界：
-  只负责从外部信息源抓取原始条目，过滤无关内容，写入 Obsidian Inbox。
-  不直接写入 2.4 知识库——那是 insights_to_rag.py（系统2）的职责。
+Responsibilities:
+  Fetch raw items from external sources, filter irrelevant content, write to Obsidian Inbox.
+  Does NOT write to 2.4 knowledge base -- that is insights_to_rag.py (System 2).
 
-流程：
-  RSS/网页 → 关键词过滤 → 按 signal_type 分组 → 写入 00-Inbox/YYYY-MM-DD.md
+Flow:
+  RSS -> keyword filter -> per-item md files -> 00-Inbox/YYYY-MM-DD/
 
-信号类型（对齐 proj_004 phase2.1 命名规范）：
+Signal types (aligned with proj_004 phase2.1):
   technical | market | team | capital
 
-下一步（人工）：
-  在 Obsidian 里审阅 00-Inbox，把值得沉淀的笔记移到 05-Insights/
-  然后运行 insights_to_rag.py 自动写入 2.4 知识库
+Next step (manual):
+  Review 00-Inbox in Obsidian, move valuable items to 05-Insights/
+  Then run insights_to_rag.py to write into 2.4 knowledge base
 """
 
 import feedparser
 import requests
 import re
-import os
 import time
 import hashlib
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from bs4 import BeautifulSoup
 from typing import Optional
 
 # ────────────────────────────────────────────────
-# 路径配置
+# Path config
 # ────────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent.parent  # game-knowledge-base/
 INBOX_DIR = BASE_DIR / "00-Inbox"
 TODAY = datetime.now().strftime("%Y-%m-%d")
 
 # ────────────────────────────────────────────────
-# 信息源配置
+# RSS Sources
 # ────────────────────────────────────────────────
 RSS_SOURCES = [
     {
-        "name": "Game Developer (Gamasutra)",
+        "name": "Game Developer",
         "url": "https://www.gamedeveloper.com/rss.xml",
         "lang": "en",
         "focus": ["technical", "design", "market"],
@@ -69,13 +69,13 @@ RSS_SOURCES = [
         "focus": ["market", "technical"],
     },
     {
-        "name": "GameSpot News",
+        "name": "GameSpot",
         "url": "https://www.gamespot.com/feeds/mashup/",
         "lang": "en",
         "focus": ["market", "team"],
     },
     {
-        "name": "触乐网",
+        "name": "ChuApp",
         "url": "https://www.chuapp.com/feed",
         "lang": "zh",
         "focus": ["market", "team", "capital"],
@@ -83,7 +83,7 @@ RSS_SOURCES = [
 ]
 
 # ────────────────────────────────────────────────
-# 关键词过滤配置（对齐2.1的四类信号）
+# Keyword filter (aligned with phase2.1 signal_type)
 # ────────────────────────────────────────────────
 KEYWORD_MAP = {
     "capital": {
@@ -97,28 +97,34 @@ KEYWORD_MAP = {
                "team", "disbanded", "shut down", "closed", "new studio"],
     },
     "technical": {
-        "zh": ["引擎", "Unreal", "Unity", "AI", "人工智能", "技术", "云游戏", "VR", "AR", "渲染", "算法"],
+        "zh": ["引擎", "Unreal", "Unity", "AI", "人工智能", "技术", "云游戏", "VR", "AR", "渲染"],
         "en": ["engine", "unreal", "unity", "AI", "artificial intelligence", "technology",
                "cloud gaming", "VR", "AR", "rendering", "algorithm", "machine learning", "neural"],
     },
     "market": {
-        "zh": ["发行", "销量", "营收", "市场", "玩家", "月活", "Steam", "上线", "版号", "出海", "全球化"],
+        "zh": ["发行", "销量", "营收", "市场", "玩家", "月活", "Steam", "上线", "版号", "出海"],
         "en": ["launch", "sales", "revenue", "market", "players", "MAU", "Steam", "release",
-               "global", "localization", "chart", "top grossing", "downloads"],
+               "global", "chart", "top grossing", "downloads"],
     },
 }
 
-# 2.4知识文档的category映射 —— 仅供 insights_to_rag.py 参考，此处注释保留作为文档
-# capital / team / market → market_trend
-# technical               → tech_innovation
-# game_design             → 需人工提炼，不做自动采集
+STRONG_SIGNALS = {
+    "capital":   ["billion", "million", "acqui", "raises", "funding", "series a", "series b",
+                  "series c", "ipo", "merger", "亿", "收购", "融资"],
+    "team":      ["layoff", "laid off", "job cut", "shut down", "disbanded", "closes",
+                  "studio closed", "裁员", "解散", "关闭"],
+    "market":    ["sales", "revenue", "top grossing", "chart", "downloads", "mau",
+                  "launch", "releases", "销量", "营收", "月活", "首发"],
+    "technical": ["unreal engine", "unity engine", "generative ai", "neural", "ray tracing",
+                  "cloud gaming", "vr headset"],
+}
+
 
 # ────────────────────────────────────────────────
-# 辅助函数
+# Helpers
 # ────────────────────────────────────────────────
 
 def clean_html(text: str) -> str:
-    """去除HTML标签，返回纯文本"""
     if not text:
         return ""
     soup = BeautifulSoup(text, "html.parser")
@@ -126,30 +132,8 @@ def clean_html(text: str) -> str:
 
 
 def detect_signal_type(title: str, summary: str, lang: str = "en") -> Optional[str]:
-    """
-    根据标题+摘要检测信号类型（对齐2.1的四类 signal_type）
-    返回匹配优先级最高的类型，无匹配返回 None（过滤掉）
-
-    策略：
-    - 标题命中权重 x3（标题比摘要更能代表核心主题）
-    - capital/team 强信号词（金额/裁员等）额外 x2 加权
-    - 无命中 → None（过滤）
-    """
     title_lower = title.lower()
     summary_lower = summary.lower()
-
-    # 强信号词：出现即高度确认该类型（不依赖多词累计）
-    STRONG_SIGNALS = {
-        "capital": ["billion", "million", "acqui", "raises", "funding", "series a", "series b",
-                    "series c", "ipo", "merger", "买", "亿", "收购", "融资"],
-        "team":    ["layoff", "laid off", "job cut", "workforce reduction", "shut down",
-                    "disbanded", "closes", "studio closed", "裁员", "解散", "关闭"],
-        "market":  ["sales", "revenue", "top grossing", "chart", "downloads", "mau", "dau",
-                    "launch", "releases", "players", "销量", "营收", "月活", "首发"],
-        "technical": ["unreal engine", "unity engine", "generative ai", "neural", "ray tracing",
-                      "cloud gaming", "vr headset", "ar glasses"],
-    }
-
     scores = {}
 
     for signal_type, keywords in KEYWORD_MAP.items():
@@ -158,13 +142,12 @@ def detect_signal_type(title: str, summary: str, lang: str = "en") -> Optional[s
         for kw in kws:
             kw_lower = kw.lower()
             if kw_lower in title_lower:
-                score += 3  # 标题命中 x3
+                score += 3
             elif kw_lower in summary_lower:
-                score += 1  # 摘要命中 x1
-        # 强信号词额外加权
+                score += 1
         for strong_kw in STRONG_SIGNALS.get(signal_type, []):
             if strong_kw in title_lower:
-                score += 6  # 强信号标题命中 x6（几乎决定分类）
+                score += 6
             elif strong_kw in summary_lower:
                 score += 2
         if score > 0:
@@ -175,18 +158,17 @@ def detect_signal_type(title: str, summary: str, lang: str = "en") -> Optional[s
     return max(scores, key=scores.get)
 
 
-def short_id(url: str, date: str) -> str:
-    """基于URL+日期生成短ID（保留，供未来去重用）"""
-    h = hashlib.md5(f"{url}{date}".encode()).hexdigest()[:6]
-    return h
+def sanitize_filename(title: str, max_len: int = 60) -> str:
+    name = re.sub(r'[\\/*?:"<>|]', '', title)
+    name = re.sub(r'\s+', '_', name.strip())
+    return name[:max_len]
 
 
 # ────────────────────────────────────────────────
-# 核心采集
+# Fetch RSS
 # ────────────────────────────────────────────────
 
-def fetch_rss(source: dict, max_items: int = 15) -> list[dict]:
-    """采集单个RSS源，返回原始条目列表"""
+def fetch_rss(source: dict, max_items: int = 15) -> list:
     items = []
     try:
         headers = {"User-Agent": "Mozilla/5.0 (GameIntelBot/1.0)"}
@@ -197,21 +179,20 @@ def fetch_rss(source: dict, max_items: int = 15) -> list[dict]:
             title = getattr(entry, "title", "")
             summary = clean_html(getattr(entry, "summary", "") or getattr(entry, "description", ""))
             link = getattr(entry, "link", "")
-            published = getattr(entry, "published", TODAY)
+            published = TODAY
 
-            # 尝试标准化日期
             try:
                 pub_struct = getattr(entry, "published_parsed", None)
                 if pub_struct:
                     published = datetime(*pub_struct[:3]).strftime("%Y-%m-%d")
             except Exception:
-                published = TODAY
+                pass
 
             lang = source.get("lang", "en")
             signal_type = detect_signal_type(title, summary, lang)
 
             if signal_type is None:
-                continue  # 过滤掉无关内容
+                continue
 
             items.append({
                 "title": title,
@@ -224,99 +205,109 @@ def fetch_rss(source: dict, max_items: int = 15) -> list[dict]:
             })
 
     except Exception as e:
-        print(f"  ⚠️  {source['name']} 获取失败: {e}")
+        print(f"  WARNING: {source['name']} fetch failed: {e}")
 
     return items
 
 
 # ────────────────────────────────────────────────
-# 输出A：Obsidian Inbox Markdown
+# Output: one md file per item
 # ────────────────────────────────────────────────
 
-def write_obsidian_inbox(items: list[dict], date: str):
-    """
-    输出到 00-Inbox/YYYY-MM-DD.md
-    按 signal_type 分区，每条附原始链接，方便人工快速浏览
-    """
-    inbox_dir = INBOX_DIR
-    inbox_dir.mkdir(parents=True, exist_ok=True)
-    out_path = inbox_dir / f"{date}.md"
+TYPE_EMOJI = {
+    "capital":   "capital",
+    "team":      "team",
+    "technical": "tech",
+    "market":    "market",
+}
 
-    # 按signal_type分组
-    groups = {}
+TYPE_CN = {
+    "capital":   "资本信号",
+    "team":      "团队信号",
+    "technical": "技术信号",
+    "market":    "市场信号",
+}
+
+
+def write_obsidian_inbox(items: list, date: str):
+    """
+    Write each item as a standalone md file under 00-Inbox/YYYY-MM-DD/
+    Filename = signal_type prefix + title
+    User can long-press in Obsidian mobile to move to 05-Insights/
+    """
+    day_dir = INBOX_DIR / date
+    day_dir.mkdir(parents=True, exist_ok=True)
+
+    written = 0
     for item in items:
-        st = item["signal_type"]
-        groups.setdefault(st, []).append(item)
+        prefix = TYPE_EMOJI.get(item["signal_type"], "misc")
+        safe_title = sanitize_filename(item["title"])
+        filename = f"[{prefix}] {safe_title}.md"
+        out_path = day_dir / filename
 
-    # signal_type → 中文标签
-    TYPE_LABEL = {
-        "capital":   "💰 资本信号（融资/收购/投资）",
-        "team":      "👥 团队信号（工作室/人事变动）",
-        "technical": "⚙️ 技术信号（引擎/AI/技术创新）",
-        "market":    "📈 市场信号（发行/销量/趋势）",
-    }
-
-    total = len(items)
-    lines = [
-        f"# 📡 游戏行业情报日报 — {date}",
-        f"",
-        f"> 采集时间：{datetime.now().strftime('%H:%M')} | 共 {total} 条过滤后条目",
-        f"> 来源：{', '.join(set(i['source_name'] for i in items))}",
-        f"> **状态**：⬜ 待审阅（划掉或移动到 05-Insights 完成后标记）",
-        f"",
-        f"---",
-        f"",
-    ]
-
-    for signal_type in ["capital", "team", "technical", "market"]:
-        group = groups.get(signal_type, [])
-        if not group:
+        # Skip existing (avoid overwrite on re-run)
+        if out_path.exists():
             continue
-        label = TYPE_LABEL[signal_type]
-        lines.append(f"## {label}")
-        lines.append("")
-        for item in group:
-            lines.append(f"### {item['title']}")
-            lines.append(f"- **来源**：{item['source_name']}　**日期**：{item['published']}")
-            lines.append(f"- **链接**：[原文]({item['link']})")
-            lines.append(f"- **摘要**：{item['summary']}")
-            lines.append(f"- **标签**：#inbox #{signal_type} #{item['source_name'].replace(' ', '-')}")
-            lines.append("")
 
-    lines += [
-        "---",
-        "",
-        f"*由 daily_intel_collector.py 自动生成 · {datetime.now().isoformat()}*",
-    ]
+        signal_cn = TYPE_CN.get(item["signal_type"], item["signal_type"])
 
-    out_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"  ✅  Obsidian Inbox → {out_path}")
-    return out_path
+        content = f"""---
+signal_type: {item["signal_type"]}
+source: {item["source_name"]}
+date: {item["published"]}
+status: inbox
+tags:
+  - inbox
+  - {item["signal_type"]}
+---
+
+# {item["title"]}
+
+**{signal_cn}** | {item["source_name"]} | {item["published"]}
+
+[原文链接]({item["link"]})
+
+## 摘要
+
+{item["summary"]}
+
+## 我的判断
+
+> （移到 05-Insights 前在这里写下你的想法，并添加 signal_type frontmatter）
+
+---
+*auto-collected {datetime.now().strftime("%Y-%m-%d %H:%M")}*
+"""
+        out_path.write_text(content, encoding="utf-8")
+        written += 1
+
+    print(f"  OK  Inbox -> {day_dir}/ ({written} files)")
+    return day_dir
 
 
 # ────────────────────────────────────────────────
-# 主流程
+# Main
 # ────────────────────────────────────────────────
 
 def main():
     print(f"\n{'='*55}")
-    print(f"  游戏行业情报日采集器  {TODAY}")
+    print(f"  Game Intel Collector  {TODAY}")
     print(f"{'='*55}\n")
 
     all_items = []
 
     for source in RSS_SOURCES:
-        print(f"📡 采集 {source['name']} ...")
+        print(f"Fetching {source['name']} ...")
         items = fetch_rss(source)
-        print(f"   过滤后：{len(items)} 条有效条目")
+        print(f"  -> {len(items)} items after filter")
         all_items.extend(items)
-        time.sleep(1)  # 礼貌性间隔，避免触发限速
+        time.sleep(1)
 
     if not all_items:
-        print("\n⚠️  本次未采集到任何有效条目，请检查网络或信息源")
+        print("\nWARNING: No items collected. Check network or sources.")
         return
 
-    # 去重（同标题+来源）
+    # Dedup by title+source
     seen = set()
     unique_items = []
     for item in all_items:
@@ -325,16 +316,14 @@ def main():
             seen.add(key)
             unique_items.append(item)
 
-    print(f"\n📊 汇总：{len(all_items)} 条原始 → {len(unique_items)} 条去重后")
-
-    # 写入 Obsidian Inbox（唯一输出）
-    print(f"\n📝 写入 Obsidian Inbox ...")
+    print(f"\nTotal: {len(all_items)} raw -> {len(unique_items)} after dedup")
+    print(f"\nWriting to Obsidian Inbox ...")
     write_obsidian_inbox(unique_items, TODAY)
 
-    print(f"\n✅ 完成！{TODAY} 情报采集结束")
-    print(f"   Obsidian Inbox: {INBOX_DIR / TODAY}.md")
-    print(f"\n   下一步：在 Obsidian 审阅 00-Inbox，把值得沉淀的笔记移到 05-Insights/")
-    print(f"           然后运行 insights_to_rag.py 写入 2.4 知识库")
+    print(f"\nDone! {TODAY} collection complete.")
+    print(f"  Inbox: {INBOX_DIR / TODAY}/")
+    print(f"\n  Next: review 00-Inbox in Obsidian, move valuable items to 05-Insights/")
+    print(f"        then run insights_to_rag.py to sync into 2.4 knowledge base")
 
 
 if __name__ == "__main__":
