@@ -1,0 +1,195 @@
+{
+  "main": {
+    "id": "43c26995d5c13fdf",
+    "type": "split",
+    "children": [
+      {
+        "id": "bdfcca9fbd20120e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c5b3097e61bda406",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "00-Inbox/2026-03-23.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-03-23"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f302a744f52cbfc2",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "533fee9d12cb7332",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical",
+            "autoReveal": false
+          },
+          "icon": "lucide-folder-closed",
+          "title": "文件列表"
+        }
+      },
+      {
+        "id": "7ddb295260fe3291",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          },
+          "icon": "lucide-search",
+          "title": "搜索"
+        }
+      },
+      {
+        "id": "ad31c8b50a8ad166",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-tags",
+          "title": "标签"
+        }
+      },
+      {
+        "id": "653f1e98620de508",
+        "type": "leaf",
+        "state": {
+          "type": "all-properties",
+          "state": {
+            "sortOrder": "frequency",
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-archive",
+          "title": "添加笔记属性"
+        }
+      },
+      {
+        "id": "365b23164c866665",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {},
+          "icon": "lucide-bookmark",
+          "title": "书签"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "8d035ab8ca2f1476",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "4bdb6f88ed076dd7",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-coming-in",
+          "title": "反向链接"
+        }
+      },
+      {
+        "id": "370bc223c68ae6ef",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-going-out",
+          "title": "出链"
+        }
+      },
+      {
+        "id": "cab289ccf3e795b2",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {
+            "followCursor": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-list",
+          "title": "大纲"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "c5b3097e61bda406",
+  "lastOpenFiles": [
+    "00-Inbox/2026-03-23 EFT数据观察.md",
+    "scripts/insights_to_rag.py",
+    "scripts/daily_intel_collector.py",
+    "/scripts/insights_to_rag.py",
+    "/scripts/daily_intel_collector.py",
+    "/05-Insights/提取射击的留存核心是沉没成本感知.md",
+    "/05-Insights",
+    "/00-Inbox/2026-03-23.md",
+    "00-Inbox/2026-03-23.md",
+    "/00-Inbox",
+    "scripts",
+    "/scripts",
+    "Templates/game-profile.md",
+    "🏠 主页.md",
+    "Templates/trend-note.md",
+    "Templates/mechanic-note.md",
+    "Templates/insight-note.md",
+    "Templates/inbox-note.md",
+    "README.md",
+    "06-DesignAssistant-Feed/TEMPLATE-feed.md",
+    "05-Insights/提取射击的留存核心是沉没成本感知.md",
+    "Templates",
+    "06-DesignAssistant-Feed"
+  ]
+}
