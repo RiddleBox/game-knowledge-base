@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00-Inbox/2026-03-23.md",
+                "file": "00-Inbox/2026-03-24/[capital] Resident_Evil_Requiem_Kills_The_Past_So_The_Series_Can_Move_.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-03-23"
+              "title": "[capital] Resident_Evil_Requiem_Kills_The_Past_So_The_Series_Can_Move_"
             }
           }
         ]
@@ -112,6 +112,7 @@
         "state": {
           "type": "backlink",
           "state": {
+            "file": "00-Inbox/2026-03-24/[capital] Resident_Evil_Requiem_Kills_The_Past_So_The_Series_Can_Move_.md",
             "collapseAll": false,
             "extraContext": false,
             "sortOrder": "alphabetical",
@@ -168,30 +169,41 @@
   },
   "active": "c5b3097e61bda406",
   "lastOpenFiles": [
-    "/00-Inbox/2026-03-24.md",
-    "00-Inbox/2026-03-24.md",
-    "/00-Inbox",
-    "00-Inbox/2026-03-23 EFT数据观察.md",
-    "scripts/insights_to_rag.py",
-    "scripts/daily_intel_collector.py",
-    "/scripts/insights_to_rag.py",
-    "/scripts/daily_intel_collector.py",
-    "/05-Insights/提取射击的留存核心是沉没成本感知.md",
-    "/05-Insights",
-    "/00-Inbox/2026-03-23.md",
+    "00-Inbox/2026-03-24/[capital] Fantasy_tactics_RPG_Wartales_is_getting_a_dense,_reactive_ca.md",
+    "00-Inbox/2026-03-24/[capital] 触乐怪话：夜抢鸡蛋，共计六枚.md",
+    "00-Inbox/2026-03-24/[capital] 触乐本周行业大事：2026年2月中国游戏市场收入超330亿元，网易回应广州外包裁员传闻，沐瞳被沙特财团高价收购.md",
+    "00-Inbox/2026-03-24/[capital] 'If_this_was_a_trial_about_whether_I_made_stupid_tweets_I_wo.md",
     "00-Inbox/2026-03-23.md",
-    "scripts",
+    "scripts/run_daily.ps1",
+    "scripts/run_daily.bat",
+    "00-Inbox/2026-03-24/[tech] Your_citizens_don't_stay_put_in_Stellaris-style_4X_strategy_.md",
+    "00-Inbox/2026-03-24/[tech] YouTuber_Who_Hid_Behind_GTA_Livestream_Found_Guilty_Of_Murde.md",
+    "00-Inbox/2026-03-24/[tech] World_of_Warcraft_Midnight_Review.md",
+    "00-Inbox/2026-03-24/[tech] Union_workers_send_a_message_to_game_industry_execs_'Let_go_.md",
+    "00-Inbox/2026-03-24/[tech] Two_more_leadership_exits_take_place_at_Xbox.md",
+    "00-Inbox/2026-03-24/[tech] Today's_hefty_Crimson_Desert_patch_includes_beginning_of_imp.md",
+    "00-Inbox/2026-03-24/[tech] To_make_video_games_for_Gen_Z,_be_authentic.md",
+    "00-Inbox/2026-03-24/[tech] This_week_in_PC_games_a_new_Hooded_Horse_city-builder,_some_.md",
+    "00-Inbox/2026-03-24/[tech] There_is_nothing_like_Marathon's_Cryo_Archive_map.md",
+    "00-Inbox/2026-03-24/[tech] The_Witcher_3_modders_are_still_discovering_and_restoring_de.md",
+    "00-Inbox/2026-03-24/[tech] The_Sunday_Papers.md",
+    "00-Inbox/2026-03-24/[tech] The_Rock_is_Losing_This_Season's_Player-Decided_Fortnite_Sto.md",
+    "00-Inbox/2026-03-24/[tech] Super_Mario_Galaxy_Movie's_Big_Canon_Reveal_Seemingly_Spoile.md",
+    "00-Inbox/2026-03-24/[tech] Starbreeze_lands_new_partner_to_adapt_Payday_series_for_film.md",
+    "00-Inbox/2026-03-24/[tech] Square_Enix_Is_Turning_Slimes_Into_AI_Chatbots_In_Dragon_Que.md",
+    "00-Inbox/2026-03-24/[tech] Solve_a_crab_housing_crisis_and_fight_a_Dreadhog_in_part_one.md",
+    "00-Inbox/2026-03-24/[tech] Slay_the_Spire_2_reminds_us_that_this_week's_patch_was_the_f.md",
+    "00-Inbox/2026-03-24/[tech] Shadowheart_and_Lae'zel's_Baldur's_Gate_3_romance_came_natur.md",
+    "00-Inbox/2026-03-24/[tech] Resident_Evil_Requiem_devs_Capcom_say_they'll_use_AI_to_impr.md",
+    "00-Inbox/2026-03-24/[tech] RPS_Verdict_Anime_racer_Screamer_slides_sideways_into_succes.md",
+    "00-Inbox/2026-03-24/[tech] Pokemon_Pokopia_Players_Are_Building_Incredibly_Complex_Crea.md",
+    "/scripts/run_daily.ps1",
+    "/scripts/run_daily.bat",
+    "/scripts/daily_intel_collector.py",
     "/scripts",
-    "Templates/game-profile.md",
-    "🏠 主页.md",
-    "Templates/trend-note.md",
-    "Templates/mechanic-note.md",
-    "Templates/insight-note.md",
-    "Templates/inbox-note.md",
-    "README.md",
-    "06-DesignAssistant-Feed/TEMPLATE-feed.md",
-    "05-Insights/提取射击的留存核心是沉没成本感知.md",
-    "Templates",
-    "06-DesignAssistant-Feed"
+    "00-Inbox/2026-03-24",
+    "/00-Inbox/2026-03-24",
+    "/00-Inbox",
+    "scripts/insights_to_rag.py"
   ]
 }
