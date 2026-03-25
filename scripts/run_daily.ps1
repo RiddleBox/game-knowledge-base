@@ -9,6 +9,7 @@ Write-Host "[$((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))] Collection done. Pus
 git add "00-Inbox\"
 $dateStr = (Get-Date).ToString("yyyy-MM-dd")
 git commit -m "auto: daily intel $dateStr"
+git pull --rebase origin master
 git push
 
 Write-Host "[$((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))] Done!"
