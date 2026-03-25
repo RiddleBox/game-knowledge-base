@@ -32,6 +32,7 @@ from typing import Optional
 # ────────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent.parent  # game-knowledge-base/
 INBOX_DIR = BASE_DIR / "00-Inbox"
+BRIEFS_DIR = BASE_DIR / "01-Briefs"
 TODAY = datetime.now().strftime("%Y-%m-%d")
 
 # ────────────────────────────────────────────────
@@ -286,6 +287,67 @@ tags:
 
 
 # ────────────────────────────────────────────────
+# Output: daily brief (single summary file)
+# ────────────────────────────────────────────────
+
+SIGNAL_SECTION = {
+    "capital":   "💰 资本动向",
+    "team":      "👥 团队动态",
+    "technical": "🔧 技术趋势",
+    "market":    "📊 市场信号",
+}
+
+
+def write_daily_brief(items: list, date: str):
+    """
+    Write a single daily brief to 01-Briefs/YYYY-MM-DD.md
+    Groups items by signal_type, each line links to the corresponding inbox note.
+    """
+    BRIEFS_DIR.mkdir(parents=True, exist_ok=True)
+    brief_path = BRIEFS_DIR / f"{date}.md"
+
+    # Group by signal type
+    grouped: dict[str, list] = {k: [] for k in SIGNAL_SECTION}
+    for item in items:
+        st = item["signal_type"]
+        if st in grouped:
+            grouped[st].append(item)
+
+    total = len(items)
+    lines = []
+    lines.append(f"# 📋 每日简报 · {date}")
+    lines.append(f"\n> 共 **{total}** 条情报 · 自动采集 · {datetime.now().strftime('%H:%M')}")
+    lines.append(f"\n---\n")
+
+    for signal_type, section_title in SIGNAL_SECTION.items():
+        group = grouped.get(signal_type, [])
+        if not group:
+            continue
+
+        lines.append(f"## {section_title}（{len(group)}条）\n")
+
+        for item in group:
+            prefix = TYPE_EMOJI.get(signal_type, "misc")
+            safe_title = sanitize_filename(item["title"])
+            # Obsidian internal link to the inbox note
+            note_name = f"[{prefix}] {safe_title}"
+            summary_short = item["summary"][:80].replace("\n", " ").strip()
+            if len(item["summary"]) > 80:
+                summary_short += "…"
+
+            lines.append(f"- [[{note_name}|{item['title'][:50]}]]")
+            lines.append(f"  `{item['source_name']}` · {summary_short}")
+            lines.append("")
+
+    lines.append("---")
+    lines.append(f"*由 daily_intel_collector.py 自动生成 · [[{date}/|查看全部原始笔记]]*")
+
+    brief_path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"  OK  Brief -> {brief_path}")
+    return brief_path
+
+
+# ────────────────────────────────────────────────
 # Main
 # ────────────────────────────────────────────────
 
@@ -319,6 +381,9 @@ def main():
     print(f"\nTotal: {len(all_items)} raw -> {len(unique_items)} after dedup")
     print(f"\nWriting to Obsidian Inbox ...")
     write_obsidian_inbox(unique_items, TODAY)
+
+    print(f"\nWriting daily brief ...")
+    write_daily_brief(unique_items, TODAY)
 
     print(f"\nDone! {TODAY} collection complete.")
     print(f"  Inbox: {INBOX_DIR / TODAY}/")
