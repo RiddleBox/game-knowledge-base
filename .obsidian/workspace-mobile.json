@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00-Inbox/2026-03-25/[capital] Fantasy_tactics_RPG_Wartales_is_getting_a_dense,_reactive_ca.md",
+                "file": "01-Briefs/2026-03-25.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "[capital] Fantasy_tactics_RPG_Wartales_is_getting_a_dense,_reactive_ca"
+              "title": "2026-03-25"
             }
           }
         ]
@@ -112,7 +112,7 @@
         "state": {
           "type": "backlink",
           "state": {
-            "file": "00-Inbox/2026-03-24/[capital] Resident_Evil_Requiem_Kills_The_Past_So_The_Series_Can_Move_.md",
+            "file": "01-Briefs/2026-03-25.md",
             "collapseAll": false,
             "extraContext": false,
             "sortOrder": "alphabetical",
@@ -169,6 +169,14 @@
   },
   "active": "c5b3097e61bda406",
   "lastOpenFiles": [
+    "00-Inbox/2026-03-25/[capital] Fantasy_tactics_RPG_Wartales_is_getting_a_dense,_reactive_ca.md",
+    "01-Briefs/2026-03-25.md",
+    "00-Inbox/2026-03-25/[tech] How_multiplayer_works_in_Slay_the_Spire_2.md",
+    "/scripts/daily_intel_collector.py",
+    "/01-Briefs/2026-03-25.md",
+    "/00-Inbox/2026-03-25/[tech] How_multiplayer_works_in_Slay_the_Spire_2.md",
+    "01-Briefs",
+    "/01-Briefs",
     "00-Inbox/2026-03-25/[capital] Crimson_Desert_Sells_3_Million_in_Just_5_Days.md",
     "00-Inbox/2026-03-25/[capital] Behaviour_Interactive_acquires_7_Days_to_Die_dev_The_Fun_Pim.md",
     "00-Inbox/2026-03-25/[capital] 触乐怪话：夜抢鸡蛋，共计六枚.md",
@@ -190,20 +198,12 @@
     "00-Inbox/2026-03-25/[tech] Solve_a_crab_housing_crisis_and_fight_a_Dreadhog_in_part_one.md",
     "00-Inbox/2026-03-25/[tech] Popular_Skyrim_mod_returns_after_9_years_with_a_major_update.md",
     "00-Inbox/2026-03-25/[tech] Pentiment_director_experimenting_during_a_game's_production_.md",
-    "00-Inbox/2026-03-25/[tech] Pearl_Abyss_forgot_to_mention_it_used_generative_AI_to_creat.md",
-    "00-Inbox/2026-03-25/[tech] Payday_Aces_High_Is_a_New_4-Player_Co-op_VR_Game_Coming_to_S.md",
-    "00-Inbox/2026-03-25/[tech] Official_World_Of_Warcraft_Music_Video_Is_A_Walk_Down_Memory.md",
-    "00-Inbox/2026-03-25/[tech] Nvidia_CEO_Jensen_Huang_says_Doom_is_the_most_influential_ga.md",
-    "00-Inbox/2026-03-25/[tech] No_Time_Or_Friends_For_An_MMO_EverQuest_Legends_Has_A_Soluti.md",
     "/scripts/run_daily.ps1",
     "/scripts",
     "/00-Inbox/2026-03-25",
     "00-Inbox/2026-03-25",
     "/00-Inbox",
     "scripts/run_daily.ps1",
-    "scripts/run_daily.bat",
-    "/scripts/run_daily.bat",
-    "/scripts/daily_intel_collector.py",
-    "00-Inbox/2026-03-24"
+    "scripts/run_daily.bat"
   ]
 }
